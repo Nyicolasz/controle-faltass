@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Controle de Faltas</title>
+</head>
+
+<body>
+  <h1>Registrar Falta</h1>
+  <form id="faltaForm">
+    <input type="date" id="data" required><br>
+    <input type="text" id="nome" placeholder="opa" required><br>
+    <select id="status">
+      <option value="Presente">Presente</option>
+      <option value="Falta">Falta</option>
+    </select><br>
+    <button type="submit">Salvar</button>
+  </form>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx6YaQucGvTrh2g4Vxk0FB0u0C9n9DpysEdJ9zVlxU0kzkbdQJnqPyFofm8ell2dvcJiQ/exec"; // Cole aqui o link do Apps Script
+
+    document.getElementById("faltaForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const data = {
+        nome: document.getElementById("nome").value,
+        data: document.getElementById("data").value,
+        status: document.getElementById("status").value
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(res => {
+          if (res.sucesso) {
+            alert("Falta registrada!");
+            document.getElementById("faltaForm").reset();
+          } else {
+            alert("Erro ao registrar: " + res.erro);
+          }
+        })
+        .catch(err => alert("Falha na conexão: " + err));
+    });
+  </script>
+</body>
+
+</html>
